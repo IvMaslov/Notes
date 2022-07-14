@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <! -- Bootstrap -- >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link href="{{ url_for('static', path='/auth.css') }}" rel="stylesheet">
+
+    
+
+    <! -- Javascript -- >
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		Create User
+	</title>
+</head>
+<body>
+	<div class="wrapper fadeInDown">
+        <div id="formContent">
+
+        <!-- Login Form -->
+            <form>
+                <label>Create Account</label>
+                <input type="text" id="name" class="fadeIn second" name="login" placeholder="Name">
+                <input type="text" id="login" class="fadeIn second" name="login" placeholder="Login">
+                <input type="text" id="password" class="fadeIn third" name="password" placeholder="Password">
+                <input type="text" id="password2" class="fadeIn third" name="password2" placeholder="Password 2">
+                <input type="submit" class="fadeIn fourth" id="sign_up_btn" value="Sign Up">
+            </form>
+
+        </div>
+        <script type="text/javascript">
+            $("#sign_up_btn").click(async function (e) {
+                e.preventDefault();
+                const URL = '/users/'
+                const data = {
+                    "name": $("#name").val(),
+                    "email": $("#login").val(),
+                    "password": $("#password").val(),
+                    "password2": $("#password2").val()
+                };
+
+                let response = await fetch(URL, {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+                });
+                let response_json = await response.json();
+                sessionStorage.setItem(
+                        "access_token",response_json["access_token"]);
+                sessionStorage.setItem(
+                        "token_type",response_json["token_type"]);
+                var new_url = "/auth/";
+                window.location.href = new_url;
+            });
+
+        </script>
+    </div>
+</body>
+</html>

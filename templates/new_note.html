@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<! -- Bootstrap -- >
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+	<link href="{{ url_for('static', path='/auth.css') }}" rel="stylesheet">
+
+	
+
+	<! -- Javascript -- >
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		New note
+	</title>
+</head>
+<body>
+	<div>
+		<div class="mb-1">
+			<input class="form-control form-control-sm" id="title_input" type="text" placeholder="Title" aria-label="default input example">
+			<label for="title_input" class="form-label" id="user_email"></label>
+			
+			<textarea class="form-control form-control-lg" id="text_input" rows="6"></textarea>
+
+			<button class="btn btn-primary" id="create_button" type="submit">Create</button>
+
+		</div>
+		<script type="text/javascript">
+			let r = async function () {
+				let url = "/get_email/";
+				let response = await fetch(url, {
+					method: "POST",
+					headers: {
+						"Authorization": sessionStorage.getItem("token_type") + " " + sessionStorage.getItem("access_token"),
+			    		"Content-type": "application/json; charset=UTF-8"
+					}
+				});
+				let obj = await response.json()
+				let update_email = document.getElementById("user_email");
+				update_email.innerText = obj.user_email;
+			}
+			r();
+
+			let new_note_btn = document.getElementById("create_button");
+			
+			new_note_btn.onclick = async function () {
+
+				let get_title = document.getElementById("title_input").value;
+				let get_text = document.getElementById("text_input").value;
+				let get_email = document.getElementById("user_email").textContent;
+				
+				let URL = "/notes/";
+				const data = {
+						"user_email": get_email,
+						"title": get_title,
+						"text": get_text
+					};
+				console.log(data);
+
+				let resp = await fetch(URL, {
+					method: "POST",
+			  		body: JSON.stringify(data),
+					headers: {
+						"Authorization": sessionStorage.getItem("token_type") + " " + sessionStorage.getItem("access_token"),
+			    		"Content-type": "application/json; charset=UTF-8"
+			  		}
+				});
+				window.location.href = "/notes/"
+			}
+
+		</script>
+	</div>
+</body>
+</html
